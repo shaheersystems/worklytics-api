@@ -44,7 +44,7 @@ class CompanyLoginApi(Resource):
             password = body.get('password')
             user = User.objects.get(email=email)
             if not user.check_password(password=password):
-                return {'error': 'Email or password invalid'}, 401
-            return {'id': str(user.id)}, 200
+                return {'error': 'Email or password invalid', "auth":False}, 401
+            return {'id': str(user.id), "auth":True}, 200
         except Exception as e:
-            return Response(str(e), mimetype="application/json", status=500)
+            return Response({"error":str(e), "auth":False}, mimetype="application/json", status=500)
