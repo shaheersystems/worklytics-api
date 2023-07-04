@@ -21,22 +21,6 @@ routes.intialize_routes(api)
 def index():
     return "<h1>Worklytics Api</h1>"
 
-@app.route('/api/companies', methods=['POST'])
-def return_companies():
-    companies = Company.objects().all()
-    company_list = []
-    for company in companies:
-        company_data = {
-            'name': company.name,
-            'location': company.location,
-            'industry': company.industry,
-            'user':company.user_id,
-            'website': company.website,
-            'founded_year': company.founded_year,
-            'hrName': company.hrName
-        }
-        company_list.append(company_data)
-    return jsonify(company_list)
 
 if __name__ == '__main__':
     app.run(debug=True)

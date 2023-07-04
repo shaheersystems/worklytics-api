@@ -48,3 +48,16 @@ class CompanyLoginApi(Resource):
             return {'id': str(user.id), "auth":True}, 200
         except Exception as e:
             return Response({"error":str(e), "auth":False}, mimetype="application/json", status=500)
+
+class CompaniesApi(Resource):
+    def get(self):
+        try:
+            companies = None
+            location=request.args.get('location')
+            if location != None:
+                companies = Company.objects(location=location).to_json()
+            else:
+                companies = Company.objects().to_json()
+            return Response(companies, mimetype="application/json", status=200)
+        except Exception as e:
+            return Response(e, mimetype="application/json", status=500)
