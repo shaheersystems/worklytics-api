@@ -63,17 +63,49 @@ class CompaniesApi(Resource):
         except Exception as e:
             return Response(e, mimetype="application/json", status=500)
 
+class JobsApi(Resource):
+    def post(self):
+        try:
+            body = request.get_json()
+            job = Jobs(**body).save()
+            id = job.id
+            return {'id': str(id)}, 200
+        except Exception as e:
+            return Response(e, mimetype="application/json", status=500)
+
 class SearchJobApi(Resource):
     def get(self):
         try:
             query=request.args.get('query')
             location=request.args.get('location')
-
-            if(location != None):
+            jobs=None
+            if (query == None and location == None):
+                jobs=Jobs.objects()
+            elif(query == None and location !=None):
+                jobs=Jobs.objects(location=location)  
+            elif(location != None):
                 jobs=Jobs.objects(Q(title__icontains=query) | Q(description__icontains=query) | Q(jobtype__icontains=query) , location=location  )
             else:
                 jobs=Jobs.objects(Q(title__icontains=query) | Q(description__icontains=query) | Q(jobtype__icontains=query) )
-           
             return Response(jobs.to_json(), mimetype="application/json", status=200)
+        except Exception as e:
+            return Response(e, mimetype="application/json", status=500)
+
+
+class JobsByCompany(Resource):
+    def get(self):
+        try:
+            company_id=request.args.get('company_id')
+            jobs=Jobs.objects(company_id=company_id)
+            return Response(jobs.to_json(), mimetype="application/json", status=200)
+        except Exception as e:
+            return Response(e, mimetype="application/json", status=500)
+
+
+class JobApi(Resource):
+    def get(self, id):
+        try:
+            job = Jobs.objects.get(id=id).to_json()
+            return Response(job, mimetype="application/json", status=200)
         except Exception as e:
             return Response(e, mimetype="application/json", status=500)
