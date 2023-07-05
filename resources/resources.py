@@ -1,6 +1,7 @@
 from flask import request, Response, jsonify
 from flask_restful import Resource
-from database.models import Test, User, Company
+from database.models import Test, User, Company,Jobs
+from mongoengine.queryset.visitor import Q
 # from database.models [models]
 
 # @apis
@@ -59,5 +60,20 @@ class CompaniesApi(Resource):
             else:
                 companies = Company.objects().to_json()
             return Response(companies, mimetype="application/json", status=200)
+        except Exception as e:
+            return Response(e, mimetype="application/json", status=500)
+
+class SearchJobApi(Resource):
+    def get(self):
+        try:
+            query=request.args.get('query')
+            location=request.args.get('location')
+
+            if(location != None):
+                jobs=Jobs.objects(Q(title__icontains=query) | Q(description__icontains=query) | Q(jobtype__icontains=query) , location=location  )
+            else:
+                jobs=Jobs.objects(Q(title__icontains=query) | Q(description__icontains=query) | Q(jobtype__icontains=query) )
+           
+            return Response(jobs.to_json(), mimetype="application/json", status=200)
         except Exception as e:
             return Response(e, mimetype="application/json", status=500)
