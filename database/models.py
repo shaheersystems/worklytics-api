@@ -31,4 +31,12 @@ class Jobs(db.Document):
     location=db.StringField(required=True)
     postedDate=db.StringField(required=True)
 
-    
+class Application(db.Document):
+    job_id=db.ReferenceField(Jobs, required=True)
+    applicant_name=db.StringField(required=True)
+    applicant_about=db.StringField(required=True)
+    applicant_email=db.StringField(required=True)
+    status=db.StringField(required=True)
+    applicant_portfolio=db.StringField(required=True)
+    appliedDate=db.StringField(required=True)
+   

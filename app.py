@@ -19,7 +19,7 @@ routes.intialize_routes(api)
 # initiallize routes
 @app.route('/')
 def index():
-    return "<h1>Worklytics Api</h1>"
+    return "<h1>Jobvista Api</h1>"
 
 
 if __name__ == '__main__':
