@@ -1,4 +1,4 @@
-from .resources import TestApi, CompanyAuthApi, CompanyLoginApi, CompaniesApi,SearchJobApi, JobsApi, JobsByCompany, JobApi, CompanyApi, ApplicationApi
+from .resources import TestApi, CompanyAuthApi, CompanyLoginApi, CompaniesApi,SearchJobApi, JobsApi, JobsByCompany, JobApi, CompanyApi, ApplicationApi, ApplicationStatusApi, ApplicationsToCompanyApi, SingleApplicationApi
 
 
 def intialize_routes(api):
@@ -12,3 +12,6 @@ def intialize_routes(api):
     api.add_resource(JobsByCompany, '/api/company/jobs')
     api.add_resource(JobApi, '/api/jobs/<id>')
     api.add_resource(ApplicationApi, '/api/applications')
+    api.add_resource(ApplicationStatusApi, '/api/application/status')
+    api.add_resource(ApplicationsToCompanyApi, '/api/company/applications')
+    api.add_resource(SingleApplicationApi, '/api/applications/<id>')

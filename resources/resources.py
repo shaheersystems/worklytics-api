@@ -158,3 +158,40 @@ class ApplicationApi(Resource):
             return Response(applications.to_json(), mimetype="application/json", status=200)
         except Exception as e:
             return Response(e, mimetype="application/json", status=500)
+class SingleApplicationApi(Resource):
+    def get(self,id):
+        try:
+            application=Application.objects.get(id=id)
+            return Response(application.to_json(), mimetype="application/json", status=200)
+        except Exception as e:
+            return Response(e, mimetype="application/json", status=500)        
+# shaheer        
+class ApplicationStatusApi(Resource):
+    def put(self):
+        try:
+            body = request.get_json()
+            application_id=body.get('application_id')
+            status=body.get('status')
+            application=Application.objects.get(id=application_id)
+            application.update(status=status)
+            return Response(application.to_json(), mimetype="application/json", status=200)
+        except Exception as e:
+            return Response(e, mimetype="application/json", status=500)
+
+# shaheer
+class ApplicationsToCompanyApi(Resource):
+    def get(self):
+        try:
+            company_id=request.args.get('company_id')
+            company = Company.objects.get(id=company_id)
+            # Find all the jobs associated with the company
+            jobs = Jobs.objects(company_id=company)
+            # Retrieve all the applications for each job and combine them into a list
+            all_applications = []
+            for job in jobs:
+                applications = Application.objects(job_id=job)
+                all_applications.extend(applications)
+            return make_response(jsonify(all_applications), 200)
+        except Exception as e:
+            print(str(e))
+            return make_response(jsonify({"error":str(e)}), 500)
